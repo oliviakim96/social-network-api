@@ -1,6 +1,6 @@
 # Title: social-network-api
 
-## User STory 
+## User Story 
 
     As a social media startup 
     I WANT an API for my social network that uses a NoSQL database
