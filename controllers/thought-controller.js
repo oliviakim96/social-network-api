@@ -1,3 +1,6 @@
+const req = require('express/lib/request');
+const res = require('express/lib/response');
+const { removeReaction } = require('../../../../RUT-VIRT-BO-FSF-PT-12-2021-U-B/RUT-VIRT-BO-FSF-PT-12-2021-U-B/18-NoSQL/02-Challenge/Main/controllers/thought-controller');
 const { Thought, User } = require('../models');
 
 const thoughtController = {
@@ -7,13 +10,17 @@ const thoughtController = {
         .then((dbThoughtData)=> {
             res.json(dbThoughtData);
         })
+        .catch((err)=>{
+            console.log(err);
+            res.status(500).json(err);
+        });
         },
     //get one thought by id 
     getThoughtbyId(req, res ) {
-        Thought.findById(id)
+        Thought.findById(req._id)
         .then((dbThoughtData)=>{
             if(!dbThoughtData){
-                return res.status(404).json({message:'Can not find any thought with this id'});
+                return res.status(404).json({message:'Can not find any thoughts with this id.'});
             }
             res.json(dbThoughtData);
         })
@@ -23,7 +30,7 @@ const thoughtController = {
         });
     },
     // Create a thought
-    CreateThought (req, res){
+    createThought (req, res){
         Thought.create(req.body)
         .then((dbThoughtData) => {
             return User.findOneAndUpdate(
@@ -42,7 +49,86 @@ const thoughtController = {
         console.log(err);
         res.status(500).json(err);
     });
+},
+//update thought
+ updateThought(req,res){
+     Thought.findOneAndUpdate(
+         {_id: req.params.thoughtId},
+         {$set:req.body},
+         {runValidators:true, new:true}
+         )
+     .then((dbThoughtData)=>{
+     if(!dbThoughtData){
+        return res.status(404).json({message: 'can not find any thoughts with this id.'});
+ }
+ res.json(dbThoughtData);
+})
+.catch((err)=>{
+    console.log(err);
+    res.status(500).json(err);
+});
+},
+//delete thought
+deleteThought(req,res) {
+    Thought.findOneAndRemove({_id:req.params.thoughtId})
+    .then((dbThoughtData)=>{
+        if(!dbThoughtData){
+            return res.status(404).json({ message:'can not find any thoughts with this id.'});
+        }
+        //remove thought id from users thought area
+        return User.findOneAndUpdate(
+            {thought:req.params.thoughtId},
+            {$pull:{ thoughts:req.params.thoughtId}},
+            {new:true}
+        );
+    })
+    .then((dbUserData)=> {
+        if(!dbUserData){
+            return res.status(404).json({message:'can not find any thought with this id.'});
+        }
+        res.json({message:'It is successfully deleted'});
+    })
+    .catch((err)=>{
+        console.log(err);
+        res.status(500).json(err);
+    });
+},
+//add a reaction to a thought
+addReaction(req, res) {
+    Thought.findOneAndUpdate(
+        {_id:req.params.thoughtId},
+        {$addToSet:{ reactions:req.body}},
+        {runValidators:true, new:true}
+    )
+    .then((dbThoughtData)=>{
+        if(!dbThoughtData){
+            return res.status(404).json({message:'can not find any thoughts with this id.'});
+        }
+        res.json(dbThoughtData);
+    })
+    .catch((err)=>{
+        console.log(err);
+        res.status(500).json(err);
+    });
+},
+//remove reaction from a thought
+removeReaction (req,res){
+    Thought.findOneAndUpdate(
+        {_id:req.params.thoughtId},
+        {$pull:{ reactions: {reactionId:req.params.reactionId}}},
+        {runvalidators:true, new: true}
+    )
+    .then((dbThoughtData)=>{
+        if(!dbThoughtData){
+            return res.status(404).json({message: 'can not find any thought with this id.'});
+        }
+        res.json(dbThoughtData)
+    })
+    .catch((err)=>{
+        console.log(err);
+        res.status(500).json(err);
+    });
 }
-}
+};
 
 module.exports=thoughtController;
