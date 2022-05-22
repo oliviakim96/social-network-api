@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static('public'));
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/social-network-API',{
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://oliviakim96:Password0625!@cluster0.3wtol.mongodb.net/?retryWrites=true&w=majority',{
     useFindModify: false,
     useNewUrlParser:true,
     useUnifiedTopology:true

@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "## User Story",
   "main": "server.js",
-  "scripts": {
-    "test": "nodemon server.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/oliviakim96/social-network-api.git"
