@@ -1,6 +1,3 @@
-const req = require('express/lib/request');
-const res = require('express/lib/response');
-const { removeReaction } = require('../../../../RUT-VIRT-BO-FSF-PT-12-2021-U-B/RUT-VIRT-BO-FSF-PT-12-2021-U-B/18-NoSQL/02-Challenge/Main/controllers/thought-controller');
 const { Thought, User } = require('../models');
 
 const thoughtController = {
