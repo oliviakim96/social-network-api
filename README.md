@@ -18,8 +18,11 @@
     WHEN I test API POST and DELETE routes in Insomnia 
     THEN I am able to successfully create delete reactions to thoughts and add and remove to a user's friend list
 
-## url 
-https://social-network-haejeongkim.herokuapp.com/
-## image
+
+## Skills
+
+- mongoose
+- express.js
+- javascript
 
 
